@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body>
+
+<div ng-app="myApp" ng-controller="mycontroller">
+  
+  <div>
+    <h2>Products</h2>
+    <table>
+          <th> Name</th>
+          <th>Price</th>
+         
+        </tr>
+     
+      <tbody>
+        <tr ng-repeat="item in items">
+          
+          <td>{{ item.name }}</td>
+          <td>{{ item.price  }}</td>
+          <td>
+            <button ng-click="addItem(item)" >Add to cart   </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div>
+    <h2> Cart</h2>
+    <table>
+        <th> Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+      <tr ng-repeat="item in cart ">
+         
+          <td>{{ item.name }}</td>
+          <td> {{ item.price }}</td>
+          <td>{{ item.count }}</td>
+        </tr>
+    
+    </table>
+    
+     
+
+    
+    <span >Total Price: {{ !totalPrice ? "0" : totalPrice  }}</span>
+    <button ng-click="removeitem()" ng-show="cart.length ">Ordern now</button>
+  </div>
+  
+</div>
+<script >
+  
+
+var app = angular.module('myApp', []);
+
+app.controller('mycontroller', function($scope) {
+  $scope.items = [
+    {
+      id: 1,
+      name: 'mobile',
+      price: 25000
+    },
+    {
+      id: 2,
+      name: 'camera',
+      price: 35000
+    },
+    {
+      id: 3,
+      name: 'laptop',
+      price: 40000
+    },
+    {
+      id: 4,
+      name: 'charger',
+      price: 2500
+    }
+    
+  ];
+  
+  
+  $scope.cart = [];
+ 
+  $scope.addItem = function(newItem) {
+    if($scope.cart.length == 0) {
+      newItem.count = 1;
+      $scope.cart.push(newItem);
+    }else {
+      var repeat = false;
+      for( var i = 0; i < $scope.cart.length; i++ ) {
+        if($scope.cart[i].id == newItem.id) {
+          $scope.cart[i].count++;
+          repeat = true;
+        }
+      }
+      if(!repeat) {
+        newItem.count = 1;
+        $scope.cart.push(newItem);
+      }
+    }
+    getcost();
+  };
+
+  var getcost = function() {
+    var totalPrice = 0;
+    for( var i = 0; i < $scope.cart.length; i++ ) {
+      totalPrice += ($scope.cart[i].count) * ($scope.cart[i].price);
+    }
+    $scope.totalPrice = totalPrice;
+  };
+
+   $scope.removeitem = function() {
+    $scope.cart.splice(0, $scope.cart.length);
+   
+    getcost();
+  };
+  
+});
+
+
+ 
+
+
+</script>
+</body>
+
+
+
+
+</html>
